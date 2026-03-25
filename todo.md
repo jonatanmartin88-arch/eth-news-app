@@ -61,3 +61,9 @@
 - [ ] Crear checkpoint final
 - [x] Documentar instrucciones de uso
 - [ ] Preparar para publicación
+
+## Bugs Reportados y Corregidos
+- [x] Noticias duplicadas: Integrar APIs reales (NewsAPI, CoinGecko)
+- [x] Generar noticias variadas y dinámicas
+- [x] Mejorar sistema de sincronización
+- [x] Inicializar sync automático al arrancar el servidor
