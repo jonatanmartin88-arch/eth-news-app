@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO categories (name, slug, description) VALUES\n('DeFi', 'defi', 'Finanzas Descentralizadas'),\n('NFTs', 'nfts', 'Tokens No Fungibles'),\n('Precio', 'precio', 'Análisis de Precios'),\n('Tecnología', 'tecnologia', 'Noticias Tecnológicas'),\n('Regulación', 'regulacion', 'Noticias Regulatorias'),\n('Ethereum', 'ethereum', 'Noticias de Ethereum');",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user xQqdCXDNkv3sRiy.5fd6049c6027 --database 6swVsQxHLeCmfmy5i2evdS --execute INSERT INTO categories (name, slug, description) VALUES\n('DeFi', 'defi', 'Finanzas Descentralizadas'),\n('NFTs', 'nfts', 'Tokens No Fungibles'),\n('Precio', 'precio', 'Análisis de Precios'),\n('Tecnología', 'tecnologia', 'Noticias Tecnológicas'),\n('Regulación', 'regulacion', 'Noticias Regulatorias'),\n('Ethereum', 'ethereum', 'Noticias de Ethereum');",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 367
+}
