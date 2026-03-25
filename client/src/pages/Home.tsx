@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useLocation } from "wouter";
 import { CategoryFilter } from "@/components/CategoryFilter";
 import { NewsCard } from "@/components/NewsCard";
@@ -90,27 +90,29 @@ export default function Home() {
     setFavorites(favoriteIds);
   }, [userFavorites]);
 
-  // Auto-refresh feed every 5 minutes
+  // Manual refresh handler - wrapped in useCallback to prevent dependency issues
+  const handleManualRefresh = useCallback(() => {
+    setIsRefreshing(true);
+    refetchFeed().finally(() => setIsRefreshing(false));
+  }, [refetchFeed]);
+
+  // Auto-refresh feed every 5 minutes - only depends on search/category, not refetchFeed
   useEffect(() => {
     if (!searchQuery && !selectedCategoryId) {
+      // Set initial interval
       refreshIntervalRef.current = setInterval(() => {
         setIsRefreshing(true);
         refetchFeed().finally(() => setIsRefreshing(false));
       }, 5 * 60 * 1000); // 5 minutes
     }
 
+    // Cleanup
     return () => {
       if (refreshIntervalRef.current) {
         clearInterval(refreshIntervalRef.current);
       }
     };
-  }, [searchQuery, selectedCategoryId, refetchFeed]);
-
-  // Manual refresh handler
-  const handleManualRefresh = () => {
-    setIsRefreshing(true);
-    refetchFeed().finally(() => setIsRefreshing(false));
-  };
+  }, [searchQuery, selectedCategoryId]); // Only depend on these, not refetchFeed
 
   // Handle favorite toggle
   const handleFavoriteToggle = (newsId: number) => {
