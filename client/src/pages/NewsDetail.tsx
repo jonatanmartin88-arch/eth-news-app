@@ -103,13 +103,32 @@ export default function NewsDetail() {
 
   const formatDate = (date: Date | null | undefined) => {
     if (!date) return "";
-    return new Date(date).toLocaleDateString("es-ES", {
+    const now = new Date();
+    const diff = now.getTime() - new Date(date).getTime();
+    const minutes = Math.floor(diff / (1000 * 60));
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const days = Math.floor(hours / 24);
+
+    let timeAgo = "";
+    if (minutes < 1) {
+      timeAgo = "Ahora mismo";
+    } else if (minutes < 60) {
+      timeAgo = `Hace ${minutes}m`;
+    } else if (hours < 24) {
+      timeAgo = `Hace ${hours}h`;
+    } else if (days < 7) {
+      timeAgo = `Hace ${days}d`;
+    }
+
+    const fullDate = new Date(date).toLocaleDateString("es-ES", {
       year: "numeric",
       month: "long",
       day: "numeric",
       hour: "2-digit",
       minute: "2-digit",
     });
+
+    return timeAgo ? `${timeAgo} • ${fullDate}` : fullDate;
   };
 
   return (

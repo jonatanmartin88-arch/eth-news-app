@@ -67,3 +67,10 @@
 - [x] Generar noticias variadas y dinámicas
 - [x] Mejorar sistema de sincronización
 - [x] Inicializar sync automático al arrancar el servidor
+
+## Mejoras Implementadas
+- [x] Mostrar tiempo relativo en minutos en tarjetas de noticias
+- [x] Badge de tiempo en esquina superior izquierda de imagen
+- [x] Actualizar tiempo cada minuto automáticamente
+- [x] Mejorar formato de fecha en página de detalles
+- [x] Mostrar tiempo relativo + fecha completa en detalles

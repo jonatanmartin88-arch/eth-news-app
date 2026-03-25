@@ -1,5 +1,5 @@
-import { Heart } from "lucide-react";
-import { useState } from "react";
+import { Heart, Clock } from "lucide-react";
+import { useState, useEffect } from "react";
 import type { News } from "../../../drizzle/schema";
 
 interface NewsCardProps {
@@ -16,19 +16,40 @@ export function NewsCard({
   onClick,
 }: NewsCardProps) {
   const [isHovering, setIsHovering] = useState(false);
+  const [timeAgo, setTimeAgo] = useState("");
 
-  const formatDate = (date: Date | null) => {
-    if (!date) return "";
-    const now = new Date();
-    const diff = now.getTime() - new Date(date).getTime();
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const days = Math.floor(hours / 24);
+  // Update time ago every minute
+  useEffect(() => {
+    const updateTime = () => {
+      if (!news.publishedAt) {
+        setTimeAgo("");
+        return;
+      }
 
-    if (hours < 1) return "Hace poco";
-    if (hours < 24) return `Hace ${hours}h`;
-    if (days < 7) return `Hace ${days}d`;
-    return new Date(date).toLocaleDateString("es-ES");
-  };
+      const now = new Date();
+      const diff = now.getTime() - new Date(news.publishedAt).getTime();
+      const minutes = Math.floor(diff / (1000 * 60));
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const days = Math.floor(hours / 24);
+
+      if (minutes < 1) {
+        setTimeAgo("Ahora mismo");
+      } else if (minutes < 60) {
+        setTimeAgo(`Hace ${minutes}m`);
+      } else if (hours < 24) {
+        setTimeAgo(`Hace ${hours}h`);
+      } else if (days < 7) {
+        setTimeAgo(`Hace ${days}d`);
+      } else {
+        setTimeAgo(new Date(news.publishedAt).toLocaleDateString("es-ES"));
+      }
+    };
+
+    updateTime();
+    const interval = setInterval(updateTime, 60000); // Update every minute
+
+    return () => clearInterval(interval);
+  }, [news.publishedAt]);
 
   return (
     <div
@@ -54,6 +75,14 @@ export function NewsCard({
               <div className="text-4xl mb-2">📰</div>
               <p className="text-muted-foreground text-sm">Sin imagen</p>
             </div>
+          </div>
+        )}
+
+        {/* Time Badge */}
+        {timeAgo && (
+          <div className="absolute top-3 left-3 flex items-center gap-1 px-2 py-1 bg-black/60 backdrop-blur rounded-full text-xs font-medium text-white">
+            <Clock size={12} />
+            <span>{timeAgo}</span>
           </div>
         )}
 
@@ -95,7 +124,9 @@ export function NewsCard({
             )}
           </div>
           <span className="text-xs text-muted-foreground">
-            {formatDate(news.publishedAt)}
+            {news.publishedAt
+              ? new Date(news.publishedAt).toLocaleDateString("es-ES")
+              : ""}
           </span>
         </div>
       </div>
