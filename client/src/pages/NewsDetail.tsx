@@ -2,9 +2,11 @@ import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
-import { ArrowLeft, Heart, Share2, ExternalLink, Loader2 } from "lucide-react";
+import { ArrowLeft, Heart, Share2, ExternalLink, Loader2, Download } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Streamdown } from "streamdown";
+import { ShareButtons } from "@/components/ShareButtons";
+import { exportNewsToPdf } from "@/lib/exportPdf";
 
 export default function NewsDetail() {
   const [location, navigate] = useLocation();
@@ -212,18 +214,37 @@ export default function NewsDetail() {
           </div>
         )}
 
+        {/* Share Section */}
+        <div className="mt-8 pt-8 border-t border-border">
+          <ShareButtons
+            title={news.title}
+            url={window.location.href}
+            description={news.description || undefined}
+          />
+        </div>
+
         {/* Source Link */}
         {news.sourceUrl && (
           <div className="mt-8 pt-8 border-t border-border">
-            <a
-              href={news.sourceUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-3 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
-            >
-              Leer artículo completo
-              <ExternalLink size={18} />
-            </a>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <a
+                href={news.sourceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-3 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+              >
+                Leer artículo completo
+                <ExternalLink size={18} />
+              </a>
+              <Button
+                variant="outline"
+                onClick={() => exportNewsToPdf([news], `${news.title}.pdf`)}
+                className="inline-flex items-center gap-2"
+              >
+                <Download size={18} />
+                Descargar como PDF
+              </Button>
+            </div>
           </div>
         )}
       </main>

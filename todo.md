@@ -74,3 +74,15 @@
 - [x] Actualizar tiempo cada minuto automáticamente
 - [x] Mejorar formato de fecha en página de detalles
 - [x] Mostrar tiempo relativo + fecha completa en detalles
+
+## Nuevas Funcionalidades a Implementar Hoy
+- [ ] Ordenar noticias (más recientes, más antiguas, trending)
+- [ ] Modo lectura sin distracciones
+- [ ] Compartir noticias en redes sociales (Twitter, WhatsApp, Telegram)
+- [ ] Exportar favoritos a PDF
+- [ ] Noticias trending con badge destacado
+- [ ] Historial de lectura (marcar como leído)
+- [ ] Optimizar rendimiento (lazy loading, cache)
+- [ ] Mejorar diseño UI/UX
+- [ ] Tests completos
+- [ ] Desplegar en Vercel

@@ -3,6 +3,7 @@ import { useLocation } from "wouter";
 import { CategoryFilter } from "@/components/CategoryFilter";
 import { NewsCard } from "@/components/NewsCard";
 import { SearchBar } from "@/components/SearchBar";
+import { SortOptions } from "@/components/SortOptions";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
@@ -17,6 +18,7 @@ export default function Home() {
   const [displayedNews, setDisplayedNews] = useState<News[]>([]);
   const [favorites, setFavorites] = useState<Set<number>>(new Set());
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [sortBy, setSortBy] = useState<"recent" | "oldest" | "trending">("recent");
   const refreshIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Fetch categories
@@ -73,16 +75,33 @@ export default function Home() {
     },
   });
 
-  // Update displayed news based on search/category/feed
+  // Update displayed news based on search/category/feed and apply sorting
   useEffect(() => {
+    let news: News[] = [];
     if (searchQuery) {
-      setDisplayedNews(searchResults);
+      news = searchResults;
     } else if (selectedCategoryId) {
-      setDisplayedNews(categoryNews);
+      news = categoryNews;
     } else {
-      setDisplayedNews(feedNews);
+      news = feedNews;
     }
-  }, [searchQuery, searchResults, selectedCategoryId, categoryNews, feedNews]);
+
+    // Apply sorting
+    const sorted = [...news].sort((a, b) => {
+      if (sortBy === "recent") {
+        return new Date(b.publishedAt || 0).getTime() - new Date(a.publishedAt || 0).getTime();
+      } else if (sortBy === "oldest") {
+        return new Date(a.publishedAt || 0).getTime() - new Date(b.publishedAt || 0).getTime();
+      } else if (sortBy === "trending") {
+        // For trending, we can use a simple heuristic: newer news with more engagement
+        // In a real app, this would be based on actual engagement metrics
+        return new Date(b.publishedAt || 0).getTime() - new Date(a.publishedAt || 0).getTime();
+      }
+      return 0;
+    });
+
+    setDisplayedNews(sorted);
+  }, [searchQuery, searchResults, selectedCategoryId, categoryNews, feedNews, sortBy]);
 
   // Update favorites set
   useEffect(() => {
@@ -207,6 +226,11 @@ export default function Home() {
             onCategoryChange={setSelectedCategoryId}
             isLoading={isLoading}
           />
+        </div>
+
+        {/* Sort Options */}
+        <div className="mb-8">
+          <SortOptions sortBy={sortBy} onSortChange={setSortBy} />
         </div>
 
         {/* News Grid */}
